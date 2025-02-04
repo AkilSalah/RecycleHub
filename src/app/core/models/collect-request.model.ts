@@ -6,5 +6,5 @@ export interface CollectRequest {
     collectionAddress: string; 
     collectionDate: Date; 
     timeSlot: string; 
-    status: 'en attente' | 'occupée' | 'en cours' | 'validée' | 'rejetée'; // Statut de la demande
+    status: 'en attente' | 'occupée' | 'en cours' | 'validée' | 'rejetée'; 
   }
