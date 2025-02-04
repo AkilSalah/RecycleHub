@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -37,12 +38,11 @@ export class AuthService {
     }
   }
 
-
   setCurrentUser(user: User): void {
     localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
   }
 
-  getCurrentUser(): User | null {
+  getCurrentUser(): Observable<User> | null {
     const userJson = localStorage.getItem(this.CURRENT_USER_KEY);
     return userJson ? JSON.parse(userJson) : null;
   }
