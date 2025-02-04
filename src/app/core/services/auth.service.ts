@@ -7,6 +7,7 @@ import { User } from '../models/user.model';
 export class AuthService {
 
   private readonly STORAGE_KEY = 'users';
+  private readonly CURRENT_USER_KEY = 'currentUser';
 
   register(user: User): void {
     const users = this.getUsers();
@@ -25,4 +26,29 @@ export class AuthService {
   private generateId(users: User[]): number {
     return users.length ? Math.max(...users.map(u => u.id)) + 1 : 1;
   }
+  login(email : string, password : string):User|null {
+    const users = this.getUsers();
+    const user = users.find(u => u.email === email && u.password === password);
+    if (user) {
+      this.setCurrentUser(user);
+      return user;
+    }else {
+      return null;
+    }
+  }
+
+
+  setCurrentUser(user: User): void {
+    localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
+  }
+
+  getCurrentUser(): User | null {
+    const userJson = localStorage.getItem(this.CURRENT_USER_KEY);
+    return userJson ? JSON.parse(userJson) : null;
+  }
+
+  logout(): void {
+    localStorage.removeItem(this.CURRENT_USER_KEY);
+  }
+
 }
