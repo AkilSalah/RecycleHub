@@ -7,4 +7,4 @@ export interface CollectRequest {
     collectionDate: Date; 
     timeSlot: string; 
     status: 'en_attente' | 'occupée' | 'en_cours' | 'validée' | 'rejetée'; 
-  }
+}
