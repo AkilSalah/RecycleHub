@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { AuthModule } from './features/auth/auth.module';
 import { SharedModuleModule } from './shared/components/shared-module.module';
 import { UserModule } from './features/user/user.module';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { UserModule } from './features/user/user.module';
     AuthModule,
     SharedModuleModule,
     UserModule,
+    StoreModule.forRoot({}, {}),
   ],
   providers: [],
   bootstrap: [AppComponent]
