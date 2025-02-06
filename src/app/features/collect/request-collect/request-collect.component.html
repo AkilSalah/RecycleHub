@@ -1,0 +1,152 @@
+<div class="bg-gradient-to-r from-green-600 min-h-[89.2vh] to-gray-400 py-16 font-[sans-serif]">
+    <div class="flex justify-between items-center relative text-left">
+        <h3 class="text-3xl p-5 md:text-5xl font-bold text-white leading-tight">
+          Requests Collect
+        </h3>
+        
+        <button 
+          (click)="OpenModal()"
+          class="block relative text-white leading-relaxed bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium mx-8 rounded-lg px-5 py-2.5  text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          type="button"
+        >
+          + Add Collect
+        </button>
+    </div>
+    
+<div class="font-sans m-2 rounded-md overflow-x-auto">
+    <table class="min-w-full divide-y divide-green-200">
+      <thead class="bg-green-100 whitespace-nowrap">
+        <tr>
+          <th class="px-4 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            wasteType
+          </th>
+          <th class="px-4 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            estimatedWeight
+          </th>
+          <th class="px-4 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            collectionAddress
+          </th>
+          <th class="px-4 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            collectionDate
+          </th>
+          <th class="px-4 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            timeSlot
+          </th>
+          <th class="px-4 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            status
+          </th>
+          <th class="px-4 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            Actions
+          </th>
+        </tr>
+      </thead>
+
+      <tbody class="bg-white divide-y divide-gray-200 whitespace-nowrap">
+        <tr>
+          <td class="px-4 py-4 text-sm text-gray-800">
+            John Doe
+          </td>
+          <td class="px-4 py-4 text-sm text-gray-800">
+            johnexample.com
+          </td>
+          <td class="px-4 py-4 text-sm text-gray-800">
+            Admin
+          </td>
+          <td class="px-4 py-4 text-sm text-gray-800">
+            Admin
+          </td>
+          <td class="px-4 py-4 text-sm text-gray-800">
+            Admin
+          </td>
+          <td class="px-4 py-4 text-sm text-gray-800">
+            2022-05-15
+          </td>
+          <td class="px-4 py-4 text-sm text-gray-800">
+            <button class="text-blue-600 mr-4">Edit</button>
+            <button class="text-red-600">Delete</button>
+          </td>
+        </tr>
+
+       
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+  <!-- Main modal -->
+  <div  [class.hidden]="!isModalOpen" class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+      <div class="relative p-4 w-full max-w-md max-h-full">
+          <!-- Modal content -->
+          <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+              <!-- Modal header -->
+              <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                      Create New Collection
+                  </h3>
+                  <button (click)="CloseModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                      </svg>
+                      <span class="sr-only">Close modal</span>
+                  </button>
+              </div>
+              <!-- Modal body -->
+              <form class="p-4 md:p-5">
+                  <div class="grid gap-4 mb-4 grid-cols-2">
+                      <div class="col-span-2">
+                          <label for="wasteType" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">wasteType</label>
+                          <input type="text" name="name" id="wasteType" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type waste type" required="">
+                      </div>
+                      <div class="col-span-2 sm:col-span-1">
+                          <label for="estimatedWeight" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">estimatedWeight</label>
+                          <input type="number" name="estimatedWeight" id="estimatedWeight" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="8kg" required="">
+                      </div>
+                      <div class="col-span-2 sm:col-span-1">
+                        <label for="collectionDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">collectionDate</label>
+                        <input type="date" name="collectionDate" id="collectionDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="10/02/2002" required="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">timeSlot</label>
+                        <div>
+                            <label for="start-time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start time:</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <input type="time" id="start-time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="09:00" max="18:00" value="00:00" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <div>
+                            <label for="end-time" class="block mb-2 mt-7 text-sm font-medium text-gray-900 dark:text-white">End time:</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <input type="time" id="end-time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="09:00" max="18:00" value="00:00" required />
+                            </div>
+                        </div>
+                    </div>
+                      <div class="col-span-2">
+                        <label for="collectionAddress" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">collectionAddress</label>
+                        <input type="text" name="collectionAddress" id="collectionAddress" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type collection Address " required="">
+                    </div>
+                  </div>
+                  <button type="submit" class="text-white inline-flex items-center bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                      <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                      Add new Collection
+                  </button>
+              </form>
+          </div>
+      </div>
+  </div> 
+  
+
+
+

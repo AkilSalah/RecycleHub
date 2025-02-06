@@ -16,7 +16,7 @@ import { UserModule } from './features/user/user.module';
     AppRoutingModule,
     AuthModule,
     SharedModuleModule,
-    UserModule
+    UserModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
