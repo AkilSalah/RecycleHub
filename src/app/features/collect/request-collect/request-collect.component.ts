@@ -1,10 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { catchError, EMPTY, filter, map, Observable, Subject, take, takeUntil, tap } from 'rxjs';
-import { CollectRequest } from '../../../core/models/collect-request.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { map, Observable, take } from 'rxjs';
+import { CollectRequest, WasteItem } from '../../../core/models/collect-request.model';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import * as CollectActions from '../../../store/actions/collect.actions';
-
 @Component({
   selector: "app-request-collect",
   templateUrl: "./request-collect.component.html",
@@ -30,13 +29,35 @@ export class RequestCollectComponent implements OnInit {
 
   private initForm(): FormGroup {
     return this.fb.group({
-      wasteType: ["", Validators.required],
-      estimatedWeight: ["", [Validators.required, Validators.min(1), Validators.max(10)]],
+      wasteItems: this.fb.array([this.createWasteItemForm()]),
       collectionAddress: ["", Validators.required],
       collectionDate: ["", Validators.required],
       startTime: ["", Validators.required],
       endTime: ["", Validators.required],
     })
+  }
+
+  private createWasteItemForm(): FormGroup {
+    return this.fb.group({
+      wasteType: ["", Validators.required],
+      estimatedWeight: ["", [Validators.required, Validators.min(1), Validators.max(10000)]],
+    })
+  }
+
+  get wasteItems() {
+    return this.collectForm.get("wasteItems") as FormArray
+  }
+
+  addWasteItem() {
+    if (this.wasteItems.length < 3) {
+      this.wasteItems.push(this.createWasteItemForm())
+    }
+  }
+
+  removeWasteItem(index: number) {
+    if (this.wasteItems.length > 1) {
+      this.wasteItems.removeAt(index)
+    }
   }
 
   loadRequests(): void {
@@ -47,6 +68,9 @@ export class RequestCollectComponent implements OnInit {
     this.isModalOpen = true
     this.collectForm.reset()
     this.editingRequestId = null
+    while (this.wasteItems.length > 1) {
+      this.wasteItems.removeAt(1)
+    }
   }
 
   closeModal(): void {
@@ -62,11 +86,22 @@ export class RequestCollectComponent implements OnInit {
     }
 
     const formValue = this.collectForm.value
+    const wasteItems: WasteItem[] = formValue.wasteItems.map((item: any) => ({
+      wasteType: item.wasteType,
+      estimatedWeight: item.estimatedWeight,
+    }))
+
+    const totalWeight = wasteItems.reduce((sum, item) => sum + item.estimatedWeight, 0)
+
+    if (totalWeight > 10000) {
+      alert("Le poids total des déchets ne doit pas dépasser 10 kg.")
+      return
+    }
+
     const request: CollectRequest = {
       id: this.editingRequestId || 0,
       userId: 1,
-      wasteType: formValue.wasteType,
-      estimatedWeight: formValue.estimatedWeight,
+      wasteItems: wasteItems,
       collectionAddress: formValue.collectionAddress,
       collectionDate: new Date(formValue.collectionDate),
       timeSlot: `${formValue.startTime} - ${formValue.endTime}`,
@@ -75,37 +110,13 @@ export class RequestCollectComponent implements OnInit {
       status: "en_attente",
     }
 
-    this.collectRequests$
-      .pipe(
-        take(1),
-        map((requests) => {
-          const pendingRequests = requests.filter((r) => r.status === "en_attente")
-          const totalWeight = pendingRequests.reduce((sum, r) => sum + r.estimatedWeight, 0)
+    if (this.editingRequestId) {
+      this.store.dispatch(CollectActions.updateCollectRequest({ request }))
+    } else {
+      this.store.dispatch(CollectActions.addCollectRequest({ request }))
+    }
 
-          if (this.editingRequestId) {
-            if (request.status !== "en_attente") {
-              alert("Vous ne pouvez modifier que les demandes en attente.")
-              return
-            }
-            this.store.dispatch(CollectActions.updateCollectRequest({ request }))
-          } else {
-            if (pendingRequests.length >= 3) {
-              alert("Vous ne pouvez pas avoir plus de 3 demandes en attente.")
-              return
-            }
-
-            if (totalWeight + request.estimatedWeight > 10) {
-              alert("Le total des poids des demandes ne doit pas dépasser 10kg.")
-              return
-            }
-
-            this.store.dispatch(CollectActions.addCollectRequest({ request }))
-          }
-
-          this.closeModal()
-        }),
-      )
-      .subscribe()
+    this.closeModal()
   }
 
   editRequest(request: CollectRequest): void {
@@ -115,9 +126,19 @@ export class RequestCollectComponent implements OnInit {
     }
 
     this.editingRequestId = request.id
+    while (this.wasteItems.length > 0) {
+      this.wasteItems.removeAt(0)
+    }
+    request.wasteItems.forEach((item) => {
+      this.wasteItems.push(
+        this.fb.group({
+          wasteType: [item.wasteType, Validators.required],
+          estimatedWeight: [item.estimatedWeight, [Validators.required, Validators.min(1), Validators.max(10000)]],
+        }),
+      )
+    })
+
     this.collectForm.patchValue({
-      wasteType: request.wasteType,
-      estimatedWeight: request.estimatedWeight,
       collectionAddress: request.collectionAddress,
       collectionDate: new Date(request.collectionDate).toISOString().split("T")[0],
       startTime: request.startTime,
@@ -144,4 +165,3 @@ export class RequestCollectComponent implements OnInit {
       .subscribe()
   }
 }
-

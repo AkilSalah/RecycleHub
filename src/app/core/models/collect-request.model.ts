@@ -1,13 +1,18 @@
-export interface CollectRequest {
-    id: number;
-    userId: number;
-    wasteType: string;
-    estimatedWeight: number;
-    collectionAddress: string;
-    collectionDate: Date;
-    timeSlot: string;
-    startTime: string;
-    endTime: string;
-    status: string;
+export interface WasteItem {
+    wasteType: "plastique" | "verre" | "papier" | "metal"
+    estimatedWeight: number
   }
+  
+  export interface CollectRequest {
+    id: number
+    userId: number
+    wasteItems: WasteItem[]
+    collectionAddress: string
+    collectionDate: Date
+    timeSlot: string
+    startTime: string
+    endTime: string
+    status: "en_attente" | "occupée" | "en_cours" | "validée" | "rejetée"
+  }
+  
   
