@@ -7,20 +7,29 @@ import { AuthModule } from './features/auth/auth.module';
 import { SharedModuleModule } from './shared/components/shared-module.module';
 import { UserModule } from './features/user/user.module';
 import { StoreModule } from '@ngrx/store';
+import { CommonModule } from '@angular/common';
+import { CollectModule } from './features/collect/collect.module';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
+    CommonModule,
     AppRoutingModule,
     AuthModule,
     SharedModuleModule,
     UserModule,
-    StoreModule.forRoot({}, {}),
+    CollectModule,
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: false, 
+    }),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,42 +1,55 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { CollectRequest } from '../models/collect-request.model';
 
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
-
 export class CollectService {
-  private STORAGE_KEY = 'collect_requests';
-  constructor() { }
-
+  private STORAGE_KEY = "collect_requests"
 
   getRequests(): Observable<CollectRequest[]> {
-    const requests = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
-    return of(requests);
+    const data = localStorage.getItem(this.STORAGE_KEY)
+    const requests = data ? JSON.parse(data) : []
+    return of(requests).pipe(tap((requests) => console.log("Requêtes chargées:", requests)))
   }
 
-  addRequest(request: CollectRequest): Observable<void> {
-    const requests = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
-    request.id = Date.now();
-    requests.push(request);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(requests));
-    return of(void 0);
+  addRequest(request: CollectRequest): Observable<CollectRequest> {
+    return this.getRequests().pipe(
+      map((requests) => {
+        const newRequest = { ...request, id: this.generateId(requests) }
+        const updatedRequests = [...requests, newRequest]
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedRequests))
+        return newRequest
+      }),
+      tap((savedRequest) => console.log("Requête sauvegardée:", savedRequest)),
+    )
   }
 
-  updateRequest(request: CollectRequest): Observable<void> {
-    let requests = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
-    requests = requests.map((r: CollectRequest) => 
-      r.id === request.id ? request : r
-    );
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(requests));
-    return of(void 0);
+  updateRequest(request: CollectRequest): Observable<CollectRequest> {
+    return this.getRequests().pipe(
+      map((requests) => {
+        const updatedRequests = requests.map((r) => (r.id === request.id ? request : r))
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedRequests))
+        return request
+      }),
+      tap((updatedRequest) => console.log("Requête mise à jour:", updatedRequest)),
+    )
   }
 
   deleteRequest(id: number): Observable<void> {
-    let requests = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
-    requests = requests.filter((r: CollectRequest) => r.id !== id);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(requests));
-    return of(void 0);
+    return this.getRequests().pipe(
+      map((requests) => {
+        const updatedRequests = requests.filter((r) => r.id !== id)
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedRequests))
+      }),
+      tap(() => console.log("Requête supprimée:", id)),
+    )
+  }
+
+  private generateId(requests: CollectRequest[]): number {
+    return requests.length > 0 ? Math.max(...requests.map((r) => r.id)) + 1 : 1
   }
 }
+
