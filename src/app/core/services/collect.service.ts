@@ -12,7 +12,7 @@ export class CollectService {
   getRequests(): Observable<CollectRequest[]> {
     const data = localStorage.getItem(this.STORAGE_KEY)
     const requests = data ? JSON.parse(data) : []
-    return of(requests).pipe(tap((requests) => console.log("Requêtes chargées:", requests)))
+    return of(requests)
   }
 
   addRequest(request: CollectRequest): Observable<CollectRequest> {

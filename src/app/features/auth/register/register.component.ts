@@ -20,14 +20,13 @@ export class RegisterComponent {
     this.registerForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       address: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       birthDate: ['', Validators.required],
     });
   }
 
-  // Méthode pour soumettre le formulaire
   onSubmit(): void {
     if (this.registerForm.valid) {
       const newUser: User = {

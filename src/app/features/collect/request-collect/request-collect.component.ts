@@ -4,7 +4,7 @@ import { CollectRequest, WasteItem } from '../../../core/models/collect-request.
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import * as CollectActions from '../../../store/actions/collect.actions';
-import { AuthService } from '../../../core/services/auth.service';
+
 @Component({
   selector: "app-request-collect",
   templateUrl: "./request-collect.component.html",
@@ -22,10 +22,15 @@ export class RequestCollectComponent implements OnInit {
     private store: Store<{ collectRequests: CollectRequest[] }>,
   ) {
     this.collectForm = this.initForm()
-    this.collectRequests$ = this.store.select("collectRequests")
+    
+    this.collectRequests$ = this.store.select("collectRequests").pipe(
+      map(reqs => reqs.filter(req => req.userId === this.currentUser!.id))
+    )
+
   }
 
   ngOnInit(): void {
+    console.log(this.collectRequests$)
     this.loadCurrentUser()
     this.loadRequests()
   }

@@ -27,8 +27,7 @@ export class LoginComponent {
       const user = this.authService.login(email, password);
       if (user) {
         if(user.role === 'particulier'){
-          console.log('hello particulier ');
-          // this.router.navigate(['/particulier-dashboard']);
+          this.router.navigate(['/particulier/request_collect']);
         }else if(user.role === 'collecteur'){
           console.log('hello collecteur ');
           // this.router.navigate(['/collecteur-dashboard']);
