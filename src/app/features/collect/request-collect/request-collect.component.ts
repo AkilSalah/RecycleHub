@@ -4,6 +4,7 @@ import { CollectRequest, WasteItem } from '../../../core/models/collect-request.
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import * as CollectActions from '../../../store/actions/collect.actions';
+import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: "app-request-collect",
   templateUrl: "./request-collect.component.html",
@@ -14,6 +15,7 @@ export class RequestCollectComponent implements OnInit {
   isModalOpen = false
   collectRequests$: Observable<CollectRequest[]>
   editingRequestId: number | null = null
+  currentUser: { id: number } | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -24,6 +26,7 @@ export class RequestCollectComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadCurrentUser()
     this.loadRequests()
   }
 
@@ -36,7 +39,13 @@ export class RequestCollectComponent implements OnInit {
       endTime: ["", Validators.required],
     })
   }
-
+  private loadCurrentUser(): void {
+    const userString = localStorage.getItem("currentUser")
+    if (userString) {
+      this.currentUser = JSON.parse(userString)
+      console.log(this.currentUser)
+    }
+  }
   private createWasteItemForm(): FormGroup {
     return this.fb.group({
       wasteType: ["", Validators.required],
@@ -62,6 +71,7 @@ export class RequestCollectComponent implements OnInit {
 
   loadRequests(): void {
     this.store.dispatch(CollectActions.loadCollectRequests())
+    
   }
 
   openModal(): void {
@@ -97,10 +107,13 @@ export class RequestCollectComponent implements OnInit {
       alert("Le poids total des déchets ne doit pas dépasser 10 kg.")
       return
     }
-
+    if (!this.currentUser || !this.currentUser.id) {
+      alert("Aucun utilisateur authentifié.");
+      return;
+    }
     const request: CollectRequest = {
       id: this.editingRequestId || 0,
-      userId: 1,
+      userId: this.currentUser.id,
       wasteItems: wasteItems,
       collectionAddress: formValue.collectionAddress,
       collectionDate: new Date(formValue.collectionDate),
