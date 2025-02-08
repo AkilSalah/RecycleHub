@@ -7,9 +7,10 @@ import { CollectEffects } from '../../store/effects/collect.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { CommonModule } from '@angular/common';
 import {  TotalWeightPipePipe } from '../../shared/pipes/total-weight-pipe.pipe';
+import { CollectionProcessComponent } from './collection-process/collection-process.component';
 
 @NgModule({
-  declarations: [RequestCollectComponent,TotalWeightPipePipe],
+  declarations: [RequestCollectComponent,TotalWeightPipePipe, CollectionProcessComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
