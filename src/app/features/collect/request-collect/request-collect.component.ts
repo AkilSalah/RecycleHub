@@ -42,6 +42,7 @@ export class RequestCollectComponent implements OnInit {
       collectionDate: ["", Validators.required],
       startTime: ["", Validators.required],
       endTime: ["", Validators.required],
+      collectionCity: ["", Validators.required],
     })
   }
   private loadCurrentUser(): void {
@@ -124,6 +125,7 @@ export class RequestCollectComponent implements OnInit {
       collectionDate: new Date(formValue.collectionDate),
       timeSlot: `${formValue.startTime} - ${formValue.endTime}`,
       startTime: formValue.startTime,
+      collectionCity: formValue.collectionCity,
       endTime: formValue.endTime,
       status: "en_attente",
     }

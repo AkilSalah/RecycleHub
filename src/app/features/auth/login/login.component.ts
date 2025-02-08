@@ -30,7 +30,7 @@ export class LoginComponent {
           this.router.navigate(['/particulier/request_collect']);
         }else if(user.role === 'collecteur'){
           console.log('hello collecteur ');
-          // this.router.navigate(['/collecteur-dashboard']);
+          this.router.navigate(['/collecteur/process_collect']);
         }
       }else {
         this.errorMessage = 'Email ou mot de passe incorrect.';

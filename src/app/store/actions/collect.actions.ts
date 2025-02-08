@@ -24,3 +24,30 @@ export const updateCollectRequestFailure = createAction("[Collect] Update Reques
 export const deleteCollectRequest = createAction("[Collect] Delete Request", props<{ id: number }>())
 export const deleteCollectRequestSuccess = createAction("[Collect] Delete Request Success", props<{ id: number }>())
 export const deleteCollectRequestFailure = createAction("[Collect] Delete Request Failure", props<{ error: any }>())
+
+export const loadCollectorRequests = createAction("[Collect] Load Collector Requests", props<{ city: string }>())
+
+export const loadCollectorRequestsSuccess = createAction(
+  "[Collect] Load Collector Requests Success",
+  props<{ requests: CollectRequest[] }>(),
+)
+
+export const loadCollectorRequestsFailure = createAction(
+  "[Collect] Load Collector Requests Failure",
+  props<{ error: any }>(),
+)
+
+export const acceptCollectRequest = createAction(
+  "[Collect] Accept Collect Request",
+  props<{ requestId: number; collectorId: number }>(),
+)
+
+export const acceptCollectRequestSuccess = createAction(
+  "[Collect] Accept Collect Request Success",
+  props<{ request: CollectRequest }>(),
+)
+
+export const acceptCollectRequestFailure = createAction(
+  "[Collect] Accept Collect Request Failure",
+  props<{ error: any }>(),
+)

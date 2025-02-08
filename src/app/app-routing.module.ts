@@ -6,6 +6,7 @@ import { ProfileComponent } from './features/user/profile/profile.component';
 import { HomeComponent } from './features/views/home/home.component';
 import { EditProfileComponent } from './features/user/edit-profile/edit-profile.component';
 import { RequestCollectComponent } from './features/collect/request-collect/request-collect.component';
+import { CollectionProcessComponent } from './features/collect/collection-process/collection-process.component';
 
 const routes: Routes = [
   {path : 'register', component : RegisterComponent },
@@ -13,7 +14,8 @@ const routes: Routes = [
   {path : 'profile', component : ProfileComponent},
   {path : 'home', component : HomeComponent},
   {path: 'edit-profile', component: EditProfileComponent},
-  {path: 'particulier/request_collect', component: RequestCollectComponent}
+  {path: 'particulier/request_collect', component: RequestCollectComponent},
+  {path: 'collecteur/process_collect', component: CollectionProcessComponent},
 
 ];
 

@@ -8,6 +8,7 @@ export interface WasteItem {
     userId: number
     wasteItems: WasteItem[]
     collectionAddress: string
+    collectionCity: string
     collectionDate: Date
     timeSlot: string
     startTime: string
