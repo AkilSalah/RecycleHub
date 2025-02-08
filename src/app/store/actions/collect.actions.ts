@@ -1,5 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { CollectRequest } from '../../core/models/collect-request.model';
+
+
 export const loadCollectRequests = createAction("[Collect] Load Requests")
 export const loadCollectRequestsSuccess = createAction(
   "[Collect] Load Requests Success",
@@ -25,6 +27,7 @@ export const deleteCollectRequest = createAction("[Collect] Delete Request", pro
 export const deleteCollectRequestSuccess = createAction("[Collect] Delete Request Success", props<{ id: number }>())
 export const deleteCollectRequestFailure = createAction("[Collect] Delete Request Failure", props<{ error: any }>())
 
+
 export const loadCollectorRequests = createAction("[Collect] Load Collector Requests", props<{ city: string }>())
 
 export const loadCollectorRequestsSuccess = createAction(
@@ -37,17 +40,7 @@ export const loadCollectorRequestsFailure = createAction(
   props<{ error: any }>(),
 )
 
-export const acceptCollectRequest = createAction(
-  "[Collect] Accept Collect Request",
-  props<{ requestId: number; collectorId: number }>(),
-)
-
-export const acceptCollectRequestSuccess = createAction(
-  "[Collect] Accept Collect Request Success",
-  props<{ request: CollectRequest }>(),
-)
-
-export const acceptCollectRequestFailure = createAction(
-  "[Collect] Accept Collect Request Failure",
-  props<{ error: any }>(),
-)
+export const updateCollectRequestStatus = createAction(
+  "[Collect] Update Request Status",
+  props<{ requestId: number; status: CollectRequest["status"] }>(), 
+);

@@ -4,6 +4,7 @@ import { of } from "rxjs"
 import { map, mergeMap, catchError, tap } from "rxjs/operators"
 import * as CollectActions from "../actions/collect.actions"
 import { CollectService } from "../../core/services/collect.service"
+import { CollectRequest } from "../../core/models/collect-request.model"
 
 @Injectable()
 export class CollectEffects {
@@ -59,5 +60,30 @@ export class CollectEffects {
       ),
     ),
   )
-}
 
+  loadCollectorRequests$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CollectActions.loadCollectorRequests),
+      mergeMap(({ city }) =>
+        this.collectService.getRequestsByCity(city).pipe(
+          map((requests) => CollectActions.loadCollectorRequestsSuccess({ requests })),
+          catchError((error) => of(CollectActions.loadCollectorRequestsFailure({ error }))),
+        ),
+      ),
+    ),
+  )
+  
+  updateRequestStatus$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CollectActions.updateCollectRequestStatus),
+      mergeMap(({ requestId, status }) =>
+        this.collectService.updateRequestStatus(requestId, status).pipe(
+          map((request) => CollectActions.updateCollectRequestSuccess({ request })),
+          catchError((error) => of(CollectActions.updateCollectRequestFailure({ error }))),
+        ),
+      ),
+    ),
+  );
+  
+
+}

@@ -7,7 +7,7 @@ import { CollectRequest } from '../models/collect-request.model';
   providedIn: "root",
 })
 export class CollectService {
-  private STORAGE_KEY = "collect_requests"
+   STORAGE_KEY = "collect_requests"
 
   getRequests(): Observable<CollectRequest[]> {
     const data = localStorage.getItem(this.STORAGE_KEY)
@@ -51,5 +51,35 @@ export class CollectService {
   private generateId(requests: CollectRequest[]): number {
     return requests.length > 0 ? Math.max(...requests.map((r) => r.id)) + 1 : 1
   }
+
+  getRequestsByCity(city: string): Observable<CollectRequest[]> {
+    return this.getRequests().pipe(map((requests) => requests.filter((request) => request.collectionCity === city)))
+  }
+
+  updateRequestStatus(requestId: number, status: CollectRequest["status"]): Observable<CollectRequest> {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+
+    return this.getRequests().pipe(
+      map((requests) => {
+        const updatedRequests = requests.map((request) =>
+          request.id === requestId
+            ? { 
+                ...request, 
+                status, 
+                collectorId: currentUser?.role === 'collecteur' ? currentUser.id : request.collectorId // Mettre à jour le collectorId si l'utilisateur est un collecteur
+              }
+            : request
+        );
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedRequests));
+        const updatedRequest = updatedRequests.find((r) => r.id === requestId);
+        if (!updatedRequest) {
+          throw new Error("Request not found");
+        }
+        return updatedRequest;
+      }),
+      tap((updatedRequest) => console.log("Statut de la requête mis à jour:", updatedRequest)),
+    );
+  }
+
 }
 
