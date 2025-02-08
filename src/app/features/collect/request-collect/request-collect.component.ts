@@ -163,6 +163,7 @@ export class RequestCollectComponent implements OnInit {
       collectionDate: new Date(request.collectionDate).toISOString().split("T")[0],
       startTime: request.startTime,
       endTime: request.endTime,
+      collectionCity: request.collectionCity
     })
 
     this.isModalOpen = true
