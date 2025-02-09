@@ -5,6 +5,59 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import * as CollectActions from '../../../store/actions/collect.actions';
 
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+
+export function futureDateValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) {
+      return null;
+    }
+    
+    const selectedDate = new Date(control.value);
+    selectedDate.setHours(0, 0, 0, 0);
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return selectedDate < today ? { pastDate: true } : null;
+  };
+}
+
+export function timeRangeValidator(): ValidatorFn {
+  return (formGroup: AbstractControl): ValidationErrors | null => {
+    const startTime = formGroup.get('startTime')?.value;
+    const endTime = formGroup.get('endTime')?.value;
+
+    if (!startTime || !endTime) {
+      return null;
+    }
+
+    const start = convertTimeToMinutes(startTime);
+    const end = convertTimeToMinutes(endTime);
+    const minTime = convertTimeToMinutes('09:00');
+    const maxTime = convertTimeToMinutes('18:00');
+
+    if (start < minTime) {
+      return { startTooEarly: true };
+    }
+    
+    if (end > maxTime) {
+      return { endTooLate: true };
+    }
+    
+    if (start >= end) {
+      return { invalidTimeRange: true };
+    }
+
+    return null;
+  };
+}
+
+function convertTimeToMinutes(time: string): number {
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * 60 + minutes;
+}
+
 @Component({
   selector: "app-request-collect",
   templateUrl: "./request-collect.component.html",
@@ -38,13 +91,14 @@ export class RequestCollectComponent implements OnInit {
   private initForm(): FormGroup {
     return this.fb.group({
       wasteItems: this.fb.array([this.createWasteItemForm()]),
-      collectionAddress: ["", Validators.required],
-      collectionDate: ["", Validators.required],
-      startTime: ["", Validators.required],
-      endTime: ["", Validators.required],
-      collectionCity: ["", Validators.required],
-    })
+      collectionAddress: ['', Validators.required],
+      collectionDate: ['', [Validators.required, futureDateValidator()]],
+      startTime: ['', Validators.required],
+      endTime: ['', Validators.required],
+      collectionCity: ['', Validators.required],
+    }, { validators: timeRangeValidator() });
   }
+
   private loadCurrentUser(): void {
     const userString = localStorage.getItem("currentUser")
     if (userString) {
@@ -52,6 +106,33 @@ export class RequestCollectComponent implements OnInit {
       console.log(this.currentUser)
     }
   }
+  
+  getErrorMessage(controlName: string): string {
+    const control = this.collectForm.get(controlName);
+    
+    if (!control?.errors) {
+      return '';
+    }
+
+    if (control.errors['pastDate']) {
+      return 'La date ne peut pas être dans le passé';
+    }
+
+    if (this.collectForm.errors?.['startTooEarly']) {
+      return 'L\'heure de début doit être après 9h';
+    }
+
+    if (this.collectForm.errors?.['endTooLate']) {
+      return 'L\'heure de fin doit être avant 18h';
+    }
+
+    if (this.collectForm.errors?.['invalidTimeRange']) {
+      return 'L\'heure de fin doit être après l\'heure de début';
+    }
+
+    return '';
+  }
+
   private createWasteItemForm(): FormGroup {
     return this.fb.group({
       wasteType: ["", Validators.required],

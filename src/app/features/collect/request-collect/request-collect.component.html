@@ -55,7 +55,7 @@
             {{ request.wasteItems | totalWeightPipe }}g
           </td>
           <td class="px-4 py-4 text-sm text-gray-800">
-            {{ request.collectionAddress }}, {{request.collectionCity}}
+            {{ request.collectionAddress }}, <b>{{request.collectionCity}}</b>
           </td>
           <td class="px-4 py-4 text-sm text-gray-800">
             {{ request.collectionDate | date }}
@@ -63,7 +63,13 @@
           <td class="px-4 py-4 text-sm text-gray-800">
             {{ request.timeSlot }}
           </td>
-          <td class="px-4 py-4 text-sm text-gray-800">
+          <td class="px-4 py-4 text-sm" [ngClass]="{
+            'text-green-600': request.status === 'validée',
+            'text-red-600': request.status === 'rejetée',
+            'text-yellow-600': request.status === 'occupée',
+            'text-blue-600': request.status === 'en_cours',
+            'text-gray-800': request.status === 'en_attente'
+          }">
             {{ request.status }}
           </td>
           <td class="px-4 py-4 text-sm text-gray-800">
@@ -87,7 +93,7 @@
       <!-- Modal header -->
       <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-          Create New Collection
+            {{ editingRequestId ? 'Edit Collection' : 'Create New Collection' }}
         </h3>
         <button (click)="closeModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
           <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -134,19 +140,28 @@
           <div class="col-span-2 sm:col-span-1">
             <label for="collectionDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Collection Date</label>
             <input formControlName="collectionDate" type="date" name="collectionDate" id="collectionDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
-          </div>
+            <div *ngIf="collectForm.get('collectionDate')?.touched && getErrorMessage('collectionDate')" class="text-red-500 text-sm mt-1">
+                {{ getErrorMessage('collectionDate') }}
+            </div>
+        </div>
           <div class="col-span-2 sm:col-span-1">
             <label for="startTime" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start Time</label>
             <input formControlName="startTime" type="time" id="startTime" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="09:00" max="18:00" required>
-          </div>
+            <div *ngIf="collectForm.touched && collectForm.errors?.['startTooEarly']" class="text-red-500 text-sm mt-1">
+                {{ getErrorMessage('startTime') }}
+              </div>
+            </div>
           <div class="col-span-2 sm:col-span-1">
             <label for="endTime" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End Time</label>
             <input formControlName="endTime" type="time" id="endTime" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="09:00" max="18:00" required>
-          </div>
+            <div *ngIf="collectForm.touched && (collectForm.errors?.['endTooLate'] || collectForm.errors?.['invalidTimeRange'])" class="text-red-500 text-sm mt-1">
+                {{ getErrorMessage('endTime') }}
+            </div>  
+        </div>
         </div>
         <button type="submit" [disabled]="collectForm.invalid" class="text-white inline-flex items-center bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
           <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-          Add new Collection
+          {{ editingRequestId ? 'Update Collection' : 'Add new Collection' }}
         </button>
       </form>
     </div>
