@@ -42,7 +42,12 @@ export class AuthService {
     localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
   }
 
-  getCurrentUser(): Observable<User> | null {
+  isUserRole(expectedRole: 'particulier' | 'collecteur'): boolean {
+    const currentUser = this.getCurrentUser();
+    return currentUser ? currentUser.role === expectedRole : false;
+  }
+
+  getCurrentUser(): User | null {
     const userJson = localStorage.getItem(this.CURRENT_USER_KEY);
     return userJson ? JSON.parse(userJson) : null;
   }

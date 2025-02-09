@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,10 +14,19 @@ export class LoginComponent {
 
   constructor(private fb : FormBuilder,
     private authService: AuthService ,
-    private router : Router){
+    private router : Router,
+    private route : ActivatedRoute,  ){
     this.loginForm = this.fb.group({
       email : ['',[Validators.required,Validators.email]],
       password : ['',[Validators.required,Validators.minLength(8)]],
+    });
+  }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['error'] === 'unauthorized') {
+        alert('Vous n\'avez pas les permissions nécessaires pour accéder à cette page.');
+      }
     });
   }
 

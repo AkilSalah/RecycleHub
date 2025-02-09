@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { User } from '../../../core/models/user.model';
 import { CollectService } from '../../../core/services/collect.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-collect-points',

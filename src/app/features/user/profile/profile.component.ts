@@ -68,7 +68,6 @@ export class ProfileComponent {
     if (confirm('Êtes-vous sûr de vouloir supprimer votre compte ?')) {
       this.userService.deleteUser();
       this.router.navigate(['/login']);
-      // alert('Compte supprimé avec succès !');
     }
   }
 }

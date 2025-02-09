@@ -8,10 +8,16 @@ import { Router } from '@angular/router';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  isParticulier: boolean = false;
+  isCollecteur: boolean = false;
 
-    constructor(private authService : AuthService , private router : Router){}
-    logout(){
-      this.authService.logout();
-      this.router.navigate(['/login']);
-    }
+  constructor(private authService : AuthService , private router : Router){}
+  ngOnInit(): void {
+    this.isParticulier = this.authService.isUserRole('particulier');
+    this.isCollecteur = this.authService.isUserRole('collecteur');
+  }
+  logout(){
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }
