@@ -36,6 +36,9 @@
             Status
           </th>
           <th class="px-4 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+             Points 
+            </th>
+          <th class="px-4 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
             Actions
           </th>
         </tr>
@@ -62,6 +65,9 @@
           </td>
           <td class="px-4 py-4 text-sm text-gray-800">
             {{ request.status }}
+          </td>
+          <td class="px-4 py-4 text-sm text-gray-800">
+            {{ request.points || 0 }} 
           </td>
           <td class="px-4 py-4 text-sm text-gray-800">
             <button (click)="editRequest(request)" class="text-blue-600 mr-4" [disabled]="request.status !== 'en_attente'">Edit</button>

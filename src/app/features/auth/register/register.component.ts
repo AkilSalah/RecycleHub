@@ -9,6 +9,8 @@ import { User } from '../../../core/models/user.model';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
+
+
 export class RegisterComponent {
   registerForm: FormGroup;
 
@@ -24,7 +26,8 @@ export class RegisterComponent {
       address: ['', Validators.required],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       birthDate: ['', Validators.required],
-      city : ['', Validators.required]
+      city : ['', Validators.required],
+      points: [0, Validators.required], 
     });
   }
 
@@ -34,6 +37,7 @@ export class RegisterComponent {
         id: 0, 
         ...this.registerForm.value,
         role: 'particulier', 
+        points: this.registerForm.value.points || 0 
       };
 
       this.authService.register(newUser); 

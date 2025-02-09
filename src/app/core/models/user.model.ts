@@ -8,4 +8,5 @@ export interface User {
     phoneNumber: string;
     birthDate: Date;
     role: 'particulier' | 'collecteur';
+    points : number;
   }

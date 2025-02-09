@@ -11,7 +11,6 @@ import { CommonModule } from '@angular/common';
 import { CollectModule } from './features/collect/collect.module';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { TotalWeightPipePipe } from './shared/pipes/total-weight-pipe.pipe';
 
 @NgModule({
   declarations: [AppComponent],

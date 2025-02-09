@@ -129,6 +129,7 @@ export class RequestCollectComponent implements OnInit {
       endTime: formValue.endTime,
       status: "en_attente",
       collectorId: 0,
+      points : 0
     }
 
     if (this.editingRequestId) {

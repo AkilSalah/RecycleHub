@@ -15,6 +15,7 @@ export interface WasteItem {
     endTime: string;
     status: "en_attente" | "occupée" | "en_cours" | "validée" | "rejetée"; 
     collectorId?: number; 
+    points: number;
   }
   
   

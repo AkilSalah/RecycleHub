@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, of, tap } from 'rxjs';
-import { CollectRequest } from '../models/collect-request.model';
+import { CollectRequest, WasteItem } from '../models/collect-request.model';
+import { User } from '../models/user.model';
 
 
 @Injectable({
@@ -58,7 +59,7 @@ export class CollectService {
 
   updateRequestStatus(requestId: number, status: CollectRequest["status"]): Observable<CollectRequest> {
     const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
-
+  
     return this.getRequests().pipe(
       map((requests) => {
         const updatedRequests = requests.map((request) =>
@@ -66,7 +67,8 @@ export class CollectService {
             ? { 
                 ...request, 
                 status, 
-                collectorId: currentUser?.role === 'collecteur' ? currentUser.id : request.collectorId // Mettre à jour le collectorId si l'utilisateur est un collecteur
+                collectorId: currentUser?.role === 'collecteur' ? currentUser.id : request.collectorId,
+                points: status === "validée" ? this.calculatePoints(request.wasteItems) : request.points 
               }
             : request
         );
@@ -81,5 +83,51 @@ export class CollectService {
     );
   }
 
+  calculatePoints(wasteItems: WasteItem[]): number {
+    return wasteItems.reduce((total, item) => {
+      const weightInKg = item.estimatedWeight / 1000; // Convertir les grammes en kilogrammes
+      switch (item.wasteType) {
+        case 'plastique':
+          return total + weightInKg * 2; 
+        case 'verre':
+          return total + weightInKg * 1; 
+        case 'papier':
+          return total + weightInKg * 1; 
+        case 'metal':
+          return total + weightInKg * 5;
+        default:
+          console.warn(`Type de déchet non reconnu: ${item.wasteType}`);
+          return total; 
+      }
+    }, 0);
+  }
+  
+  convertPointsToVoucher(userId: number, points: number): Observable<{ user: User; voucherAmount: number }> {
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find((u: User) => u.id === userId);
+  
+    if (!user || user.points < points) {
+      throw new Error("Points insuffisants");
+    }
+  
+    let voucherAmount = 0;
+    if (points >= 500) {
+      voucherAmount = 350;
+    } else if (points >= 200) {
+      voucherAmount = 120;
+    } else if (points >= 100) {
+      voucherAmount = 50;
+    } else {
+      throw new Error("Points insuffisants pour un bon d'achat");
+    }
+  
+    const updatedUsers = users.map((u: User) =>
+      u.id === userId ? { ...u, points: u.points - points } : u
+    );
+    localStorage.setItem('users', JSON.stringify(updatedUsers));
+  
+    const updatedUser = updatedUsers.find((u: User) => u.id === userId);
+    return of({ user: updatedUser, voucherAmount });
+  }
 }
 

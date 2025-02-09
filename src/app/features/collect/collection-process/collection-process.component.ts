@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, mergeMap, Observable, take, tap } from 'rxjs';
 import { CollectRequest } from '../../../core/models/collect-request.model';
 import { User } from '../../../core/models/user.model';
 import { Store } from '@ngrx/store';
@@ -18,6 +18,7 @@ export class CollectionProcessComponent {
   currentUser: User | null = null;
 
   constructor(
+    private collectService: CollectService,
     private store: Store<{ collectRequests: CollectRequest[] }>,
   ) {
     this.collectRequests$ = this.store.select((state) => state.collectRequests);
@@ -53,8 +54,25 @@ export class CollectionProcessComponent {
 
   finishCollection(requestId: number, status: "validée" | "rejetée"): void {
     this.store.dispatch(CollectActions.updateCollectRequestStatus({ requestId, status }));
+    if (status === "validée") {
+      this.collectRequests$.pipe(
+        take(1),
+        mergeMap((requests) => {
+          const request = requests.find((r) => r.id === requestId);
+          if (!request) {
+            throw new Error("Request not found");
+          }
+          const points = this.collectService.calculatePoints(request.wasteItems);
+          return this.collectService.updateRequestStatus(requestId, status).pipe(
+            map(() => ({ request, points }))
+          );
+        }),
+        tap(({ request, points }) => {
+          console.log("Points attribués à la demande:", points);
+        }),
+      ).subscribe();
+    }
   }
-
   calculateTotalWeight(wasteItems: { estimatedWeight: number }[]): number {
     return wasteItems.reduce((total, item) => total + item.estimatedWeight, 0);
   }
