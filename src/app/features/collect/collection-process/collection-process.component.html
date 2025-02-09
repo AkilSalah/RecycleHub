@@ -76,6 +76,9 @@
                   Rejeter
                 </button>
               </div>
+              <div *ngIf="request.status === 'validée'">
+              <p class="text-green-700">Déja Validé</p>  
+              </div>
             </td>          
           </tr>
         </tbody>

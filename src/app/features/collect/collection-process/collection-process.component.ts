@@ -54,6 +54,7 @@ export class CollectionProcessComponent {
 
   finishCollection(requestId: number, status: "validée" | "rejetée"): void {
     this.store.dispatch(CollectActions.updateCollectRequestStatus({ requestId, status }));
+  
     if (status === "validée") {
       this.collectRequests$.pipe(
         take(1),
@@ -62,17 +63,18 @@ export class CollectionProcessComponent {
           if (!request) {
             throw new Error("Request not found");
           }
-          const points = this.collectService.calculatePoints(request.wasteItems);
-          return this.collectService.updateRequestStatus(requestId, status).pipe(
-            map(() => ({ request, points }))
+  
+          return this.collectService.updateUserPoints(request.userId, request.points).pipe(
+            map(() => request)
           );
         }),
-        tap(({ request, points }) => {
-          console.log("Points attribués à la demande:", points);
+        tap((request) => {
+          console.log(`Points attribués à l'utilisateur ${request.userId}: ${request.points}`);
         }),
       ).subscribe();
     }
   }
+
   calculateTotalWeight(wasteItems: { estimatedWeight: number }[]): number {
     return wasteItems.reduce((total, item) => total + item.estimatedWeight, 0);
   }

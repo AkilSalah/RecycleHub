@@ -82,10 +82,10 @@ export class CollectService {
       tap((updatedRequest) => console.log("Statut de la requête mis à jour:", updatedRequest)),
     );
   }
-
+  
   calculatePoints(wasteItems: WasteItem[]): number {
     return wasteItems.reduce((total, item) => {
-      const weightInKg = item.estimatedWeight / 1000; // Convertir les grammes en kilogrammes
+      const weightInKg = item.estimatedWeight / 1000; 
       switch (item.wasteType) {
         case 'plastique':
           return total + weightInKg * 2; 
@@ -102,6 +102,16 @@ export class CollectService {
     }, 0);
   }
   
+  updateUserPoints(userId: number, points: number): Observable<User> {
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const updatedUsers = users.map((user: User) =>
+      user.id === userId ? { ...user, points: (user.points || 0) + points } : user
+    );
+    localStorage.setItem('users', JSON.stringify(updatedUsers));
+    const updatedUser = updatedUsers.find((u: User) => u.id === userId);
+    return of(updatedUser);
+  }
+  
   convertPointsToVoucher(userId: number, points: number): Observable<{ user: User; voucherAmount: number }> {
     const users = JSON.parse(localStorage.getItem('users') || '[]');
     const user = users.find((u: User) => u.id === userId);
@@ -111,11 +121,11 @@ export class CollectService {
     }
   
     let voucherAmount = 0;
-    if (points >= 500) {
+    if (points === 500) {
       voucherAmount = 350;
-    } else if (points >= 200) {
+    } else if (points === 200) {
       voucherAmount = 120;
-    } else if (points >= 100) {
+    } else if (points === 100) {
       voucherAmount = 50;
     } else {
       throw new Error("Points insuffisants pour un bon d'achat");
@@ -130,4 +140,3 @@ export class CollectService {
     return of({ user: updatedUser, voucherAmount });
   }
 }
-

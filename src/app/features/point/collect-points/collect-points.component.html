@@ -1,1 +1,65 @@
-<p>collect-points works!</p>
+<div class=" flex bg-gradient-to-r from-green-600 min-h-[89.2vh] to-gray-400 py-16 font-[sans-serif]">
+    <div class="font-[sans-serif] ">
+      <div *ngIf="currentUser" class="text-3xl p-5 md:text-3xl font-bold text-white leading-tight">
+        <p>Bonjour, {{ currentUser.fullName }} !</p>
+        <p>Vous avez actuellement {{ currentUser.points | number: '1.2-2' }} points.</p>
+        </div>
+      <div class=" m-3">
+        <button (click)="convertPoints(currentUser.id, 100)" [disabled]="currentUser.points < 100" type="button"
+          class="px-5 py-2.5 flex items-center justify-center rounded text-white text-sm tracking-wider font-medium border-none outline-none bg-red-600 hover:bg-red-700 active:bg-red-600">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16px" fill="currentColor" class="mr-2 inline" viewBox="0 0 24 24">
+            <path
+              d="M1 1a1 1 0 1 0 0 2h1.78a.694.694 35.784 0 1 .657.474l3.297 9.893c.147.44.165.912.053 1.362l-.271 1.087C6.117 17.41 7.358 19 9 19h12a1 1 0 1 0 0-2H9c-.39 0-.64-.32-.545-.697l.205-.818A.64.64 142.028 0 1 9.28 15H20a1 1 0 0 0 .95-.684l2.665-8A1 1 0 0 0 22.666 5H6.555a.694.694 35.783 0 1-.658-.474l-.948-2.842A1 1 0 0 0 4 1zm7 19a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"
+              data-original="#000000" paint-order="fill markers stroke" />
+          </svg>
+          Convertir 100 points en bon d'achat de 50 Dh
+        </button>
+  
+        <button (click)="convertPoints(currentUser.id, 200)" [disabled]="currentUser.points < 200" type="button"
+          class="px-5 py-2.5 flex mt-2 items-center justify-center rounded text-white text-sm tracking-wider font-medium border-none outline-none bg-red-600 hover:bg-red-700 active:bg-red-600">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16px" fill="currentColor" class="mr-2 inline" viewBox="0 0 24 24">
+            <path
+              d="M1 1a1 1 0 1 0 0 2h1.78a.694.694 35.784 0 1 .657.474l3.297 9.893c.147.44.165.912.053 1.362l-.271 1.087C6.117 17.41 7.358 19 9 19h12a1 1 0 1 0 0-2H9c-.39 0-.64-.32-.545-.697l.205-.818A.64.64 142.028 0 1 9.28 15H20a1 1 0 0 0 .95-.684l2.665-8A1 1 0 0 0 22.666 5H6.555a.694.694 35.783 0 1-.658-.474l-.948-2.842A1 1 0 0 0 4 1zm7 19a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"
+              data-original="#000000" paint-order="fill markers stroke" />
+          </svg>
+          Convertir 200 points en bon d'achat de 120 Dh
+        </button>
+  
+        <button (click)="convertPoints(currentUser.id, 500)" [disabled]="currentUser.points < 500" type="button"
+          class="px-5 py-2.5 flex mt-2 items-center justify-center rounded text-white text-sm tracking-wider font-medium border-none outline-none bg-red-600 hover:bg-red-700 active:bg-red-600">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16px" fill="currentColor" class="mr-2 inline" viewBox="0 0 24 24">
+            <path
+              d="M1 1a1 1 0 1 0 0 2h1.78a.694.694 35.784 0 1 .657.474l3.297 9.893c.147.44.165.912.053 1.362l-.271 1.087C6.117 17.41 7.358 19 9 19h12a1 1 0 1 0 0-2H9c-.39 0-.64-.32-.545-.697l.205-.818A.64.64 142.028 0 1 9.28 15H20a1 1 0 0 0 .95-.684l2.665-8A1 1 0 0 0 22.666 5H6.555a.694.694 35.783 0 1-.658-.474l-.948-2.842A1 1 0 0 0 4 1zm7 19a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"
+              data-original="#000000" paint-order="fill markers stroke" />
+          </svg>
+          Convertir 500 points en bon d'achat de 350 Dh
+        </button>
+      </div>
+    </div>
+  
+    <div *ngIf="voucherAmount !== null"
+    class="bg-white grid sm:grid-cols-2 items-center shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full h-full max-w-2xl max-sm:max-w-sm rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4">
+    <div class="h-full">
+      <img
+        src="https://t3.ftcdn.net/jpg/02/52/02/10/360_F_252021018_oCZAoAZOQCiCVYFNALGuFELejV5xLtwz.jpg"
+        class="w-full h-full object-fill"
+      />
+    </div>
+
+    <div class="p-6">
+      <h3 class="text-xl font-semibold">{{ voucherAmount }} Dh voucher</h3>
+      <p class="mt-3 text-sm text-gray-500 leading-relaxed">
+        Vous avez généré un bon d'achat de {{ voucherAmount }} Dh.
+      </p>
+      <div class="flex flex-wrap items-center cursor-pointer border border-gray-300 rounded-lg w-full px-4 py-2 mt-6">
+        <div class="flex-1">
+          <p class="text-sm text-gray-800 font-semibold">{{ currentUser.fullName }}</p>
+          <p class="text-xs text-gray-500 mt-0.5">Particulier</p>
+        </div>
+      </div>
+      <button (click)="clearVoucher()" class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+        Effacer le bon d'achat
+      </button>
+    </div>
+  </div>
+</div>
