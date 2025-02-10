@@ -9,12 +9,15 @@ import { CollectionProcessComponent } from './features/collect/collection-proces
 import { CollectPointsComponent } from './features/point/collect-points/collect-points.component';
 import { RoleGuard } from './core/guards/role.guard';
 import { AuthGuard } from './core/guards/auth.guard';
+import { RequestCollectResolver } from './core/resolvers/collect-requests.resolver';
 
 const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] , 
+        resolve: { collectRequests: RequestCollectResolver } 
+  },
   { 
     path: 'particulier/request_collect', 
     component: RequestCollectComponent, 

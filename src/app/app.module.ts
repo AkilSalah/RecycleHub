@@ -29,7 +29,7 @@ import { PointModule } from './features/point/point.module';
       maxAge: 25,
       logOnly: false, 
     }),
-    PointModule
+    PointModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

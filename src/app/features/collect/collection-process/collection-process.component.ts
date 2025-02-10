@@ -4,8 +4,8 @@ import { CollectRequest } from '../../../core/models/collect-request.model';
 import { User } from '../../../core/models/user.model';
 import { Store } from '@ngrx/store';
 import * as CollectActions from '../../../store/actions/collect.actions'
-import { UserService } from '../../../core/services/user.service';
 import { CollectService } from '../../../core/services/collect.service';
+
 @Component({
   selector: 'app-collection-process',
   templateUrl: './collection-process.component.html',

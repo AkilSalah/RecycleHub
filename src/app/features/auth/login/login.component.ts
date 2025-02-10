@@ -36,10 +36,10 @@ export class LoginComponent {
       const user = this.authService.login(email, password);
       if (user) {
         if(user.role === 'particulier'){
-          this.router.navigate(['/particulier/request_collect']);
+          this.router.navigate(['/home']);
         }else if(user.role === 'collecteur'){
           console.log('hello collecteur ');
-          this.router.navigate(['/collecteur/process_collect']);
+          this.router.navigate(['/home']);
         }
       }else {
         this.errorMessage = 'Email ou mot de passe incorrect.';
